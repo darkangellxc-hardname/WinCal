@@ -1,58 +1,100 @@
 <UserControl x:Class="WinCal.Views.Controls.DayCell"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Width="40" Height="48"
              Cursor="Hand"
              MouseLeftButtonUp="OnDayClick">
 
+    <!--
+        单元格（D-3 重排；圆点行结构修正）：
+        ① 定位改为「数字行(*) + 次级文字行(Auto) + 事件圆点行(Auto)」的三行自适应 Grid，
+           彻底去掉硬编码的顶部偏移 10 / 36（那些绝对值与格子实际高度、字号档位、
+           FontSizeOffset 缩放解耦，在格子被黄历面板/日程区挤压变矮时会把次级文字推出下沿导致裁切）。
+        ② 事件圆点不再是「格子级贴底覆盖层」，而是内容网格的 Row2 —— 与次级文字行在布局上
+           真正错开，任何档位/高度下都不重叠（原覆盖层会与贴底的次级文字落进同一垂直区间）。
+        ③ 数字与今日圆底叠放同一格并整体垂直居中，圆底尺寸走 DynamicResource。
+        ④ 选中描边置于内容层之下（底色之上）并内缩 1px，避免描边压住文字。
+    -->
     <Grid>
-        <!-- 今日高亮圆形背景（缩小，不遮挡农历） -->
-        <Ellipse x:Name="TodayCircle"
-                 Width="26" Height="26"
-                 Fill="{DynamicResource TodayAccentBrush}"
-                 Visibility="Collapsed"
-                 VerticalAlignment="Top"
-                 Margin="0,4,0,0" />
+        <!-- 1) 整格底色（休 / 班） -->
+        <Border x:Name="CellBackground"
+                Background="Transparent"
+                CornerRadius="{DynamicResource CellCornerRadius}" />
 
-        <!-- 选中日期圆形边框 -->
-        <Ellipse x:Name="SelectedCircle"
-                 Width="26" Height="26"
-                 Stroke="{DynamicResource TodayAccentBrush}"
-                 StrokeThickness="1.5"
-                 Fill="Transparent"
-                 Visibility="Collapsed"
-                 VerticalAlignment="Top"
-                 Margin="0,4,0,0" />
+        <!-- 2) 选中描边（1.5px 强调色，圆角；置于内容之下，内缩 1px 防压字） -->
+        <Border x:Name="SelectedBorder"
+                Margin="1"
+                BorderBrush="{DynamicResource TodayAccentBrush}"
+                BorderThickness="1.5"
+                CornerRadius="{DynamicResource CellCornerRadius}"
+                Background="Transparent"
+                Visibility="Collapsed" />
 
-        <!-- 日期数字 -->
-        <TextBlock x:Name="DayText"
-                   Text="{Binding DayNumber}"
-                   FontSize="13"
-                   FontWeight="Normal"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Margin="0,8,0,0"
-                   Foreground="{DynamicResource TextPrimaryBrush}" />
+        <!-- 3) 内容层：随格子高度自适应，次级文字永不被下沿裁切 -->
+        <Grid Margin="{DynamicResource CellContentMargin}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />     <!-- Row0 数字行：占据余量并居中 -->
+                <RowDefinition Height="Auto" />  <!-- Row1 次级文字行：始终参与测量 -->
+                <RowDefinition Height="Auto" />  <!-- Row2 事件圆点行：与文字行错开，不重叠 -->
+            </Grid.RowDefinitions>
 
-        <!-- 农历文本（可见性由代码后台控制） -->
-        <TextBlock x:Name="LunarText"
-                   FontSize="8"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Bottom"
-                   Margin="0,0,0,9"
-                   Foreground="{DynamicResource TextSecondaryBrush}"
-                   Visibility="Collapsed" />
+            <!-- 数字行：今日圆底 + 日期数字叠放、整体居中 -->
+            <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Ellipse x:Name="TodayCircle"
+                         Width="{DynamicResource TodayCircleSize}"
+                         Height="{DynamicResource TodayCircleSize}"
+                         Fill="{DynamicResource TodayAccentBrush}"
+                         Visibility="Collapsed"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
 
-        <!-- 事件圆点（最多3个，颜色对应事件本身） -->
-        <StackPanel x:Name="EventDots"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Margin="0,0,0,2"
-                    Visibility="Collapsed">
-            <Ellipse x:Name="Dot1" Width="4" Height="4" Margin="1,0" Visibility="Collapsed"/>
-            <Ellipse x:Name="Dot2" Width="4" Height="4" Margin="1,0" Visibility="Collapsed"/>
-            <Ellipse x:Name="Dot3" Width="4" Height="4" Margin="1,0" Visibility="Collapsed"/>
-        </StackPanel>
+                <TextBlock x:Name="DayText"
+                           FontSize="{DynamicResource CellDayFontSize}"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextPrimaryBrush}" />
+            </Grid>
+
+            <!-- 次级文字（农历 / 节气 / 节日）：Row1，居中，不再被裁剪 -->
+            <TextBlock x:Name="LunarText"
+                       Grid.Row="1"
+                       FontSize="{DynamicResource CellSecondaryFontSize}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"
+                       Foreground="{DynamicResource TextSecondaryBrush}"
+                       Visibility="Collapsed" />
+
+            <!-- 事件圆点（最多 3 个，4×4，间距 2）：Row2，与文字行错开。
+                 底边距走 EventDotsMargin 资源，使「内容层 Bottom + 本行 Bottom」恒为 4，
+                 达成 PRD §6.2 要求的「事件圆点居底 Bottom=4」（各档位一致）。 -->
+            <StackPanel x:Name="EventDots"
+                        Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="{DynamicResource EventDotsMargin}"
+                        Visibility="Collapsed">
+                <Ellipse x:Name="Dot1" Width="{DynamicResource CellEventDotSize}" Height="{DynamicResource CellEventDotSize}" Margin="1,0" Visibility="Collapsed" />
+                <Ellipse x:Name="Dot2" Width="{DynamicResource CellEventDotSize}" Height="{DynamicResource CellEventDotSize}" Margin="1,0" Visibility="Collapsed" />
+                <Ellipse x:Name="Dot3" Width="{DynamicResource CellEventDotSize}" Height="{DynamicResource CellEventDotSize}" Margin="1,0" Visibility="Collapsed" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 4) 休 / 班 胶囊（高14 宽22 圆角7 字号9 白字 右4/下6；格子级右下覆盖层，PRD §6.2 设计） -->
+        <Border x:Name="Capsule"
+                Height="{DynamicResource CapsuleHeight}"
+                Width="{DynamicResource CapsuleWidth}"
+                CornerRadius="7"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,4,6"
+                Visibility="Collapsed">
+            <TextBlock x:Name="CapsuleText"
+                       FontSize="{DynamicResource CapsuleFontSize}"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Border>
     </Grid>
 </UserControl>

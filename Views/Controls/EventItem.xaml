@@ -3,9 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Height="36">
 
+    <!-- hover 背景改为样式触发器驱动，随主题（HoverBrush）自动切换，避免 code-behind 直接赋值 -->
     <Border x:Name="HoverBorder"
             CornerRadius="6"
             Margin="4,2,4,2">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource HoverBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
         <Grid Margin="8,0,8,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3" />   <!-- 颜色条 -->
@@ -13,7 +25,7 @@
                 <ColumnDefinition Width="*" />   <!-- 内容 -->
             </Grid.ColumnDefinitions>
 
-            <!-- 左侧颜色条 -->
+            <!-- 左侧颜色条（随事件配色；去重圆点/颜色标识保留） -->
             <Rectangle Grid.Column="0"
                        RadiusX="1.5" RadiusY="1.5"
                        Fill="{Binding Color}"

@@ -1,0 +1,109 @@
+<UserControl x:Class="WinCal.Views.Controls.AlmanacDetailPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- 底部黄历详情面板：点哪天显示哪天。高度由 Metrics 档位资源控制，内容超出时内部滚动。 -->
+    <Border Background="{DynamicResource CardBackgroundBrush}"
+            BorderBrush="{DynamicResource SeparatorBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Margin="12,6,12,10"
+            Padding="10,8"
+            Height="{DynamicResource AlmanacPanelHeight}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+                <!-- 主标题：农历 + 干支（含生肖） -->
+                <TextBlock x:Name="TitleTextBlock"
+                           FontSize="{DynamicResource AlmanacTitleFontSize}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
+                           TextWrapping="Wrap" />
+
+                <!-- 元信息行：冲煞 / 建除 / 二十八宿 / 月相 -->
+                <TextBlock x:Name="MetaText"
+                           FontSize="{DynamicResource AlmanacMetaFontSize}"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,3,0,0"
+                           Visibility="Collapsed" />
+
+                <Border x:Name="Separator"
+                        Height="1"
+                        Background="{DynamicResource SeparatorBrush}"
+                        Margin="0,7,0,7" />
+
+                <!-- 宜 -->
+                <Grid x:Name="YiRow" Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource AlmanacYiBrush}"
+                            CornerRadius="3"
+                            Padding="5,1"
+                            VerticalAlignment="Top"
+                            Margin="0,1,8,0">
+                        <TextBlock Text="宜"
+                                   FontSize="{DynamicResource AlmanacMetaFontSize}"
+                                   Foreground="White" />
+                    </Border>
+                    <TextBlock Grid.Column="1"
+                               x:Name="YiText"
+                               FontSize="{DynamicResource AlmanacBodyFontSize}"
+                               Foreground="{DynamicResource AlmanacYiBrush}"
+                               TextWrapping="Wrap" />
+                </Grid>
+
+                <!-- 忌 -->
+                <Grid x:Name="JiRow" Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource AlmanacJiBrush}"
+                            CornerRadius="3"
+                            Padding="5,1"
+                            VerticalAlignment="Top"
+                            Margin="0,1,8,0">
+                        <TextBlock Text="忌"
+                                   FontSize="{DynamicResource AlmanacMetaFontSize}"
+                                   Foreground="White" />
+                    </Border>
+                    <TextBlock Grid.Column="1"
+                               x:Name="JiText"
+                               FontSize="{DynamicResource AlmanacBodyFontSize}"
+                               Foreground="{DynamicResource AlmanacJiBrush}"
+                               TextWrapping="Wrap" />
+                </Grid>
+
+                <!-- 吉神 -->
+                <TextBlock x:Name="JiShenText"
+                           FontSize="{DynamicResource AlmanacMetaFontSize}"
+                           Foreground="{DynamicResource AlmanacJiShenBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,2,0,0"
+                           Visibility="Collapsed" />
+
+                <!-- 凶煞 -->
+                <TextBlock x:Name="XiongShaText"
+                           FontSize="{DynamicResource AlmanacMetaFontSize}"
+                           Foreground="{DynamicResource AlmanacXiongShaBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,2,0,0"
+                           Visibility="Collapsed" />
+
+                <!-- 无数据占位 -->
+                <TextBlock x:Name="EmptyText"
+                           Text="当日无黄历数据"
+                           FontSize="{DynamicResource AlmanacBodyFontSize}"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           HorizontalAlignment="Center"
+                           Margin="0,24,0,24"
+                           Visibility="Collapsed" />
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

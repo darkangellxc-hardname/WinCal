@@ -1,0 +1,20 @@
+<UserControl x:Class="WinCal.Views.Controls.HolidaySummaryBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="28"
+             Cursor="Hand"
+             MouseLeftButtonUp="OnBarClick">
+
+    <!-- P1-1 当月放假速览条：文案完全由 ICS 数据推导；无假期时整个控件由外部折叠（不占高度） -->
+    <Border Background="{DynamicResource HolidayBrush}"
+            CornerRadius="6"
+            Margin="8,0,8,4"
+            Padding="8,0">
+        <TextBlock x:Name="SummaryText"
+                   Text="{Binding HolidaySummaryText}"
+                   FontSize="11"
+                   Foreground="{DynamicResource TextPrimaryBrush}"
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" />
+    </Border>
+</UserControl>

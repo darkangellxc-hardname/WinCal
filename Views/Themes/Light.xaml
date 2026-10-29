@@ -29,6 +29,22 @@
     <!-- 事件圆点 -->
     <Color x:Key="EventDotColor">#FF0078D4</Color>
 
+    <!-- ★ T03 新增：休 / 班 / 节气 / 农历节日 / 胶囊 / 周末（架构 §8④ 精确色值） -->
+    <Color x:Key="HolidayColor">#FFFDECEC</Color>          <!-- 休：整格浅红底（对齐参考图） -->
+    <Color x:Key="WorkdayColor">#FFEAF2FA</Color>          <!-- 班：整格浅蓝灰底 -->
+    <Color x:Key="HolidayTextColor">#FFD13438</Color>      <!-- 节日名 / 红 -->
+    <Color x:Key="SolarTermTextColor">#FF107C10</Color>    <!-- 节气 / 绿 -->
+    <Color x:Key="LunarFestivalTextColor">#FFC75B12</Color><!-- 农历节日 / 橙 -->
+    <Color x:Key="CapsuleHolidayColor">#FFE8A33D</Color>   <!-- 休 胶囊底（白字） -->
+    <Color x:Key="CapsuleWorkdayColor">#FF5B7C99</Color>   <!-- 班 胶囊底（白字） -->
+    <Color x:Key="WeekendTextColor">#FF8A8A8A</Color>      <!-- 周末弱区分（P1-3） -->
+
+    <!-- ★ T03 新增：黄历详情面板 -->
+    <Color x:Key="AlmanacYiColor">#FF2E7D32</Color>        <!-- 宜 / 绿 -->
+    <Color x:Key="AlmanacJiColor">#FFC62828</Color>        <!-- 忌 / 红 -->
+    <Color x:Key="AlmanacJiShenColor">#FFA87900</Color>    <!-- 吉神 / 暗金 -->
+    <Color x:Key="AlmanacXiongShaColor">#FF7A5C8A</Color>  <!-- 凶煞 / 灰紫 -->
+
     <!-- 画刷（从颜色派生） -->
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackgroundColor}" />
@@ -43,5 +59,21 @@
     <SolidColorBrush x:Key="PressedBrush" Color="{StaticResource PressedColor}" />
     <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedColor}" />
     <SolidColorBrush x:Key="EventDotBrush" Color="{StaticResource EventDotColor}" />
+
+    <!-- ★ T03 新增画刷 -->
+    <SolidColorBrush x:Key="HolidayBrush" Color="{StaticResource HolidayColor}" />
+    <SolidColorBrush x:Key="WorkdayBrush" Color="{StaticResource WorkdayColor}" />
+    <SolidColorBrush x:Key="HolidayTextBrush" Color="{StaticResource HolidayTextColor}" />
+    <SolidColorBrush x:Key="SolarTermTextBrush" Color="{StaticResource SolarTermTextColor}" />
+    <SolidColorBrush x:Key="LunarFestivalTextBrush" Color="{StaticResource LunarFestivalTextColor}" />
+    <SolidColorBrush x:Key="CapsuleHolidayBrush" Color="{StaticResource CapsuleHolidayColor}" />
+    <SolidColorBrush x:Key="CapsuleWorkdayBrush" Color="{StaticResource CapsuleWorkdayColor}" />
+    <SolidColorBrush x:Key="WeekendTextBrush" Color="{StaticResource WeekendTextColor}" />
+
+    <!-- ★ T03 新增画刷：黄历详情面板 -->
+    <SolidColorBrush x:Key="AlmanacYiBrush" Color="{StaticResource AlmanacYiColor}" />
+    <SolidColorBrush x:Key="AlmanacJiBrush" Color="{StaticResource AlmanacJiColor}" />
+    <SolidColorBrush x:Key="AlmanacJiShenBrush" Color="{StaticResource AlmanacJiShenColor}" />
+    <SolidColorBrush x:Key="AlmanacXiongShaBrush" Color="{StaticResource AlmanacXiongShaColor}" />
 
 </ResourceDictionary>
