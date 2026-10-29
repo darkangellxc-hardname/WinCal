@@ -8,6 +8,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/Themes/Light.xaml" />
+                <!-- 控件样式：全部用 DynamicResource 引用主题画刷，主题切换后自动跟随 -->
+                <ResourceDictionary Source="Views/Themes/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- 托盘图标定义（右键菜单在代码中动态创建）。默认折叠：仅当 ShowTrayIcon=true 时由代码置为 Visible -->

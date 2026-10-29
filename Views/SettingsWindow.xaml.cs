@@ -114,10 +114,24 @@ public partial class SettingsWindow : Window
         _settings = AppSettings.Load();
 
         InitializeComponent();
+        ClampToWorkArea();
         LoadSettings();
         _initialized = true;
 
         Loaded += OnLoaded;
+    }
+
+    /// <summary>
+    /// 小屏幕（如 1366×768）上避免窗口超出工作区。
+    /// 设置窗口居中于主屏显示，故用主屏工作区判断即可。
+    /// </summary>
+    private void ClampToWorkArea()
+    {
+        var work = SystemParameters.WorkArea;
+        if (work.Height > 0 && Height > work.Height - 32)
+        {
+            Height = Math.Max(420, work.Height - 32);
+        }
     }
 
     // ==================================================================
@@ -244,11 +258,11 @@ public partial class SettingsWindow : Window
                 {
                     note += "\n" + status.BannerText;
                 }
-                SystemCalendarNote.Text = note;
+                SystemCalendarNoteText.Text = note;
             }
             else
             {
-                SystemCalendarNote.Text = "ℹ 当前已开启「使用模拟数据」，数据源状态不适用于真实场景。";
+                SystemCalendarNoteText.Text = "ℹ 当前已开启「使用模拟数据」，数据源状态不适用于真实场景。";
             }
 
             SystemCalendarNote.Visibility = Visibility.Visible;
@@ -256,7 +270,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             // 诚实兜底：探测失败也必须标注不可用，绝不假装可用
-            SystemCalendarNote.Text =
+            SystemCalendarNoteText.Text =
                 "⚠ 系统日历：本机不可用（缺少 Windows SDK）。已改用 ICS 订阅提供数据。";
             SystemCalendarNote.Visibility = Visibility.Visible;
             Debug.WriteLine($"WinCal: 设置页数据源状态探测失败: {ex.Message}");
@@ -305,6 +319,14 @@ public partial class SettingsWindow : Window
         if (SubscriptionList == null) return;
         SubscriptionList.ItemsSource = null;
         SubscriptionList.ItemsSource = _subscriptions;
+
+        // 空列表时给出明确引导，避免用户面对一片空白不知所措
+        if (EmptySubscriptionHint != null)
+        {
+            EmptySubscriptionHint.Visibility = _subscriptions.Count == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
     }
 
     /// <summary>添加一条新的 ICS 订阅。</summary>
@@ -326,12 +348,13 @@ public partial class SettingsWindow : Window
             FullUrl = url,
             DisplayUrl = ShortenUrl(url),
             Alias = string.Empty,
-            // 默认用途：节假日（与 AppSettings 迁移逻辑一致）
-            PurposeIndex = (int)IcsPurpose.Holiday,
+            // 用途取用户在「添加订阅源」行里选的值（默认节假日，与 AppSettings 迁移逻辑一致）
+            PurposeIndex = (int)NormalizePurpose(NewIcsPurposeCombo?.SelectedIndex ?? 0),
             Enabled = true
         });
 
         NewIcsUrlTextBox.Text = string.Empty;
+        if (NewIcsPurposeCombo != null) NewIcsPurposeCombo.SelectedIndex = 0;
         RenumberSubscriptions();
         RefreshSubscriptionList();
     }
@@ -506,6 +529,7 @@ public partial class SettingsWindow : Window
         _subscriptions.Clear();
         RefreshSubscriptionList();
         NewIcsUrlTextBox.Text = string.Empty;
+        if (NewIcsPurposeCombo != null) NewIcsPurposeCombo.SelectedIndex = 0;
         IcsRefreshCombo.SelectedIndex = 1;
         UpcomingDaysCombo.SelectedIndex = 1;
         WeekStartSunday.IsChecked = false;

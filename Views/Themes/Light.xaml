@@ -5,6 +5,14 @@
     <Color x:Key="BackgroundColor">#FFFFFFFF</Color>
     <Color x:Key="CardBackgroundColor">#FFFFFFFF</Color>
 
+    <!-- ★ 输入控件 / 次级表面（2026-10-30 新增，供 Controls.xaml 使用） -->
+    <Color x:Key="SurfaceAltColor">#FFF6F6F6</Color>
+    <Color x:Key="InputBackgroundColor">#FFFFFFFF</Color>
+    <Color x:Key="InputBorderColor">#FFD6D6D6</Color>
+    <Color x:Key="InputBorderHoverColor">#FFB0B0B0</Color>
+    <Color x:Key="AccentSoftColor">#FFE5F1FB</Color>
+    <Color x:Key="DangerColor">#FFC62828</Color>
+
     <!-- 强调色 -->
     <Color x:Key="TodayAccentColor">#FF0078D4</Color>
 
@@ -59,6 +67,14 @@
     <SolidColorBrush x:Key="PressedBrush" Color="{StaticResource PressedColor}" />
     <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedColor}" />
     <SolidColorBrush x:Key="EventDotBrush" Color="{StaticResource EventDotColor}" />
+
+    <!-- ★ 输入控件 / 次级表面画刷 -->
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="{StaticResource SurfaceAltColor}" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="{StaticResource InputBackgroundColor}" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="{StaticResource InputBorderColor}" />
+    <SolidColorBrush x:Key="InputBorderHoverBrush" Color="{StaticResource InputBorderHoverColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
 
     <!-- ★ T03 新增画刷 -->
     <SolidColorBrush x:Key="HolidayBrush" Color="{StaticResource HolidayColor}" />

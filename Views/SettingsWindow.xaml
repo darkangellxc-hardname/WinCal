@@ -2,423 +2,619 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="WinCal 设置"
-        Width="460" Height="680"
+        Width="480" Height="720"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         ShowInTaskbar="False"
         Topmost="True"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display">
+
+    <Window.Resources>
+        <!-- ================= 可复用样式 ================= -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="RowLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="RowHintStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,3,0,0" />
+        </Style>
+
+        <Style x:Key="RowDividerStyle" TargetType="Border">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource SeparatorBrush}" />
+            <Setter Property="Opacity" Value="0.55" />
+            <Setter Property="Margin" Value="0,11" />
+        </Style>
+
+        <!-- 窗口内统一套用主题化控件样式（作用域仅本窗口） -->
+        <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}" />
+        <Style TargetType="ComboBox" BasedOn="{StaticResource InputComboBoxStyle}" />
+        <Style TargetType="CheckBox" BasedOn="{StaticResource AppCheckBoxStyle}" />
+        <Style TargetType="RadioButton" BasedOn="{StaticResource AppRadioButtonStyle}" />
+        <Style TargetType="Slider" BasedOn="{StaticResource AppSliderStyle}" />
+        <Style TargetType="ToolTip" BasedOn="{StaticResource AppToolTipStyle}" />
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource ThinScrollBarStyle}" />
+    </Window.Resources>
 
     <Border Background="{DynamicResource BackgroundBrush}"
             BorderBrush="{DynamicResource BorderBrush}"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="12"
             ClipToBounds="True">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <!-- 标题栏 -->
-        <Border Grid.Row="0" x:Name="TitleBar" Background="{DynamicResource HoverBrush}">
-            <Grid Margin="16,0,8,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Text="⚙ 设置"
-                           FontSize="15" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}"
-                           VerticalAlignment="Center" />
-
-                <Button Grid.Column="1" x:Name="CloseButton"
-                        Width="32" Height="32"
-                        Background="Transparent" BorderThickness="0"
-                        Cursor="Hand" Click="OnCloseClick">
-                    <Path Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
-                          Fill="{DynamicResource TextSecondaryBrush}"
-                          Stretch="Uniform" Width="14" Height="14" />
-                </Button>
-            </Grid>
-        </Border>
-
-        <!-- 设置内容区域 -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="20,16,20,16">
-
-                <!-- ============ #1 颜色主题 ============ -->
-                <TextBlock Text="颜色主题" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <ComboBox x:Name="ThemeComboBox" Margin="0,0,0,20" Padding="8,6"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="跟随系统" />
-                    <ComboBoxItem Content="浅色" />
-                    <ComboBoxItem Content="深色" />
-                </ComboBox>
-
-                <!-- ============ #2 字体大小 ============ -->
-                <TextBlock Text="字体大小" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <Grid Margin="0,0,0,4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="A" FontSize="11"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" Margin="0,0,8,0" />
-                    <Slider Grid.Column="1" x:Name="FontSizeSlider"
-                            Minimum="-2" Maximum="2" Value="0"
-                            TickFrequency="1" IsSnapToTickEnabled="True"
-                            VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="2" Text="A" FontSize="17" FontWeight="Bold"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" Margin="8,0,0,0" />
-                </Grid>
-                <TextBlock x:Name="FontSizeLabel" Text="标准"
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,16" />
-
-                <!-- ============ #3 顶部时间日期（实现死设置 ShowHeaderDateTime / TimeFormat） ============ -->
-                <TextBlock Text="顶部时间日期" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <Grid Margin="0,0,0,8">
+            <!-- ==================== 标题栏 ==================== -->
+            <Border Grid.Row="0" x:Name="TitleBar"
+                    Background="{DynamicResource SurfaceAltBrush}"
+                    BorderBrush="{DynamicResource SeparatorBrush}"
+                    BorderThickness="0,0,0,1">
+                <Grid Margin="16,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="显示时间"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="ShowHeaderDateTimeCheck"
-                              VerticalAlignment="Center" />
-                </Grid>
-                <Grid Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="时间格式"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" Margin="0,0,12,0" />
-                    <ComboBox Grid.Column="1" x:Name="TimeFormatCombo" Padding="8,6"
-                              SelectedIndex="0" HorizontalAlignment="Left" MinWidth="140">
-                        <ComboBoxItem Content="跟随系统" />
-                        <ComboBoxItem Content="12 小时制" />
-                        <ComboBoxItem Content="24 小时制" />
-                    </ComboBox>
-                </Grid>
 
-                <!-- ============ #4 开机自启动 ============ -->
-                <Grid Margin="0,0,0,8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="开机自启动"
-                               FontSize="13" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="AutoStartupCheckBox"
-                              VerticalAlignment="Center" />
-                </Grid>
-                <TextBlock x:Name="AutoStartupAskedText" Text=""
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,20" TextWrapping="Wrap" />
-
-                <!-- ============ #5 显示托盘图标（P0-2，默认关闭） ============ -->
-                <Grid Margin="0,0,0,4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="显示托盘图标"
-                               FontSize="13" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="ShowTrayIconCheck"
-                              VerticalAlignment="Center" />
-                </Grid>
-                <TextBlock Text="关闭后托盘图标隐藏（可用快捷键或点时钟唤起面板；退出入口在本窗口内）。"
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,20" TextWrapping="Wrap" />
-
-                <!-- ============ #6 弹出快捷键（显示真实生效组合） ============ -->
-                <TextBlock Text="弹出快捷键" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <Grid Margin="0,0,0,4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="当前生效"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" Margin="0,0,12,0" />
-                    <Border Grid.Column="1" Background="{DynamicResource HoverBrush}"
-                            BorderBrush="{DynamicResource SeparatorBrush}"
-                            BorderThickness="1" CornerRadius="4" Padding="8,6"
-                            HorizontalAlignment="Left" MinWidth="160">
-                        <TextBlock x:Name="HotkeyValueText" Text=""
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextPrimaryBrush}" />
-                    </Border>
-                </Grid>
-                <TextBlock Text="期望组合（下次启动生效）"
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,4,0,4" />
-                <TextBox x:Name="HotkeyInputBox" Padding="8,6" Margin="0,0,0,4"
-                         ToolTip="例如 Ctrl+Alt+C；必须至少含一个修饰键（Ctrl/Alt/Shift/Win）" />
-                <TextBlock Text="若期望组合被其它程序占用，启动时会自动尝试备选组合，上方显示实际生效值。"
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,20" TextWrapping="Wrap" />
-
-                <!-- ============ #7 启用日程功能（P0-7，默认关闭） ============ -->
-                <Grid Margin="0,0,0,4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="启用日程功能"
-                               FontSize="13" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="EnableScheduleCheck"
-                              VerticalAlignment="Center" />
-                </Grid>
-                <TextBlock Text="默认关闭；关闭时休班 / 节气标记照常显示，仅隐藏日程层。"
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,8" TextWrapping="Wrap" />
-
-                <Grid Margin="0,0,0,20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="日程区默认展开"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="ScheduleExpandedCheck"
-                              VerticalAlignment="Center" />
-                </Grid>
-
-                <!-- ============ #8 日历数据源（「系统日历」诚实标注不可用） ============ -->
-                <TextBlock Text="日历数据源" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <ComboBox x:Name="DataSourceComboBox" Margin="0,0,0,6" Padding="8,6"
-                          SelectedIndex="1" SelectionChanged="OnDataSourceChanged">
-                    <ComboBoxItem x:Name="SystemCalendarItem" Content="系统日历" />
-                    <ComboBoxItem Content="ICS 订阅链接" />
-                    <ComboBoxItem Content="两者都用" />
-                </ComboBox>
-                <TextBlock x:Name="SystemCalendarNote"
-                           FontSize="11"
-                           Foreground="{DynamicResource HolidayTextBrush}"
-                           Margin="0,0,0,12" TextWrapping="Wrap"
-                           Visibility="Collapsed" />
-
-                <!-- ICS 订阅列表（含「用途」下拉 + 启停勾选） -->
-                <StackPanel x:Name="IcsPanel" Visibility="Collapsed" Margin="0,0,0,20">
-                    <TextBlock Text="ICS 订阅（每条可指定用途）"
-                               FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"
-                               Margin="0,0,0,8" />
-
-                    <ItemsControl x:Name="SubscriptionList" Margin="0,0,0,8">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderThickness="1"
-                                        BorderBrush="{DynamicResource SeparatorBrush}"
-                                        CornerRadius="6"
-                                        Padding="8,6"
-                                        Margin="0,0,0,6">
-                                    <StackPanel>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <Ellipse Grid.Column="0" Width="8" Height="8"
-                                                     Fill="{Binding Color}"
-                                                     VerticalAlignment="Center"
-                                                     Margin="0,0,6,0" />
-                                            <TextBlock Grid.Column="1"
-                                                       Text="{Binding DisplayUrl}"
-                                                       FontSize="11"
-                                                       Foreground="{DynamicResource TextSecondaryBrush}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       VerticalAlignment="Center" />
-                                            <CheckBox Grid.Column="2"
-                                                      IsChecked="{Binding Enabled, Mode=TwoWay}"
-                                                      VerticalAlignment="Center"
-                                                      Margin="6,0,6,0"
-                                                      ToolTip="启用该订阅" />
-                                            <ComboBox Grid.Column="3"
-                                                      SelectedIndex="{Binding PurposeIndex, Mode=TwoWay}"
-                                                      Width="118" Padding="6,3"
-                                                      Margin="0,0,6,0"
-                                                      ToolTip="用途：决定数据进入哪条数据流">
-                                                <ComboBoxItem Content="节假日" />
-                                                <ComboBoxItem Content="农历节气" />
-                                                <ComboBoxItem Content="日程" />
-                                            </ComboBox>
-                                            <Button Grid.Column="4" Content="✕"
-                                                    FontSize="11" Width="24" Height="24"
-                                                    Padding="0"
-                                                    Background="Transparent" BorderThickness="0"
-                                                    Cursor="Hand"
-                                                    Click="OnRemoveSubscription"
-                                                    Tag="{Binding}" />
-                                        </Grid>
-                                        <TextBox Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                 FontSize="11" Padding="4,3" Margin="14,4,0,0"
-                                                 ToolTip="为此订阅设置一个显示名称" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <!-- 添加新订阅 -->
-                    <Grid Margin="0,0,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="NewIcsUrlTextBox"
-                                 Padding="8,6"
-                                 ToolTip="输入 .ics 日历订阅链接" />
-                        <Button Grid.Column="1" Content="添加"
-                                Padding="12,6" Margin="6,0,0,0"
-                                Background="{DynamicResource TodayAccentBrush}"
-                                Foreground="White"
-                                BorderThickness="0"
-                                FontWeight="SemiBold"
-                                Cursor="Hand"
-                                Click="OnAddSubscription" />
-                    </Grid>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="刷新频率"
-                                   FontSize="11"
-                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="设置"
+                                   FontSize="14.5" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}"
                                    VerticalAlignment="Center" />
-                        <ComboBox Grid.Column="1" x:Name="IcsRefreshCombo"
-                                  Margin="8,0,0,0" Padding="6,4"
-                                  SelectedIndex="1" HorizontalAlignment="Left">
-                            <ComboBoxItem Content="10 分钟" />
-                            <ComboBoxItem Content="30 分钟" />
-                            <ComboBoxItem Content="60 分钟" />
-                            <ComboBoxItem Content="120 分钟" />
-                        </ComboBox>
-                    </Grid>
+                    </StackPanel>
+
+                    <Button Grid.Column="1" x:Name="CloseButton"
+                            Style="{StaticResource IconButtonStyle}"
+                            Width="30" Height="30"
+                            Click="OnCloseClick"
+                            ToolTip="关闭">
+                        <Path Data="M0,0 L10,10 M10,0 L0,10"
+                              Stroke="{DynamicResource TextSecondaryBrush}"
+                              StrokeThickness="1.5"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round"
+                              Width="10" Height="10" Stretch="Uniform" />
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- ==================== 内容区 ==================== -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="0,0,2,0">
+                <StackPanel Margin="16,14,14,6">
+
+                    <!-- ============ 外观 ============ -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="外观" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="颜色主题" />
+                                    <TextBlock Style="{StaticResource RowHintStyle}" Text="默认跟随 Windows 的浅色 / 深色设置" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" x:Name="ThemeComboBox"
+                                          Width="118" SelectedIndex="0" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="跟随系统" />
+                                    <ComboBoxItem Content="浅色" />
+                                    <ComboBoxItem Content="深色" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="字体大小" />
+                                    <TextBlock x:Name="FontSizeLabel" Style="{StaticResource RowHintStyle}"
+                                               Text="标准" />
+                                </StackPanel>
+                                <Grid Grid.Column="1" Width="190" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="A" FontSize="10"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <Slider Grid.Column="1" x:Name="FontSizeSlider"
+                                            Minimum="-2" Maximum="2" Value="0"
+                                            TickFrequency="1" IsSnapToTickEnabled="True"
+                                            VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="A" FontSize="16" FontWeight="Bold"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               VerticalAlignment="Center" Margin="6,0,0,0" />
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============ 面板与唤起 ============ -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="面板与唤起" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="在顶部显示时间与日期" />
+                                <CheckBox Grid.Column="1" x:Name="ShowHeaderDateTimeCheck"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="时间格式" />
+                                <ComboBox Grid.Column="1" x:Name="TimeFormatCombo"
+                                          Width="118" SelectedIndex="0" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="跟随系统" />
+                                    <ComboBoxItem Content="12 小时制" />
+                                    <ComboBoxItem Content="24 小时制" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <!-- 快捷键 -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="弹出快捷键" />
+                                <Border Grid.Column="1" Background="{DynamicResource AccentSoftBrush}"
+                                        CornerRadius="5" Padding="9,4" VerticalAlignment="Center">
+                                    <TextBlock x:Name="HotkeyValueText" Text=""
+                                               FontSize="11.5"
+                                               Foreground="{DynamicResource TextPrimaryBrush}" />
+                                </Border>
+                            </Grid>
+                            <TextBox x:Name="HotkeyInputBox" Margin="0,8,0,0"
+                                     ToolTip="例如 Ctrl+Alt+C；必须至少含一个修饰键（Ctrl / Alt / Shift / Win）" />
+                            <TextBlock Style="{StaticResource RowHintStyle}"
+                                       Text="填入期望组合，保存后下次启动生效。若被其它程序占用，会自动尝试备选组合，上方徽标显示实际生效值。" />
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="显示托盘图标" />
+                                    <TextBlock Style="{StaticResource RowHintStyle}"
+                                               Text="关闭后托盘图标隐藏；退出程序入口在本窗口底部。" />
+                                </StackPanel>
+                                <CheckBox Grid.Column="1" x:Name="ShowTrayIconCheck"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="开机自启动" />
+                                    <TextBlock x:Name="AutoStartupAskedText" Style="{StaticResource RowHintStyle}"
+                                               Text="" />
+                                </StackPanel>
+                                <CheckBox Grid.Column="1" x:Name="AutoStartupCheckBox"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============ 日程 ============ -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="日程" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="启用日程功能" />
+                                    <TextBlock Style="{StaticResource RowHintStyle}"
+                                               Text="关闭时休班 / 节气标记照常显示，仅隐藏日程层。" />
+                                </StackPanel>
+                                <CheckBox Grid.Column="1" x:Name="EnableScheduleCheck"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="日程区默认展开" />
+                                <CheckBox Grid.Column="1" x:Name="ScheduleExpandedCheck"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}" Text="近期事件显示范围" />
+                                    <TextBlock Style="{StaticResource RowHintStyle}"
+                                               Text="面板底部「近期事件」列表向前看多远。" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" x:Name="UpcomingDaysCombo"
+                                          Width="118" SelectedIndex="1" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="1 天" />
+                                    <ComboBoxItem Content="3 天" />
+                                    <ComboBoxItem Content="7 天" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============ 日历数据源 ============ -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="日历数据源" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="数据来源" />
+                                <ComboBox Grid.Column="1" x:Name="DataSourceComboBox"
+                                          Width="150" SelectedIndex="1" VerticalAlignment="Center"
+                                          SelectionChanged="OnDataSourceChanged">
+                                    <ComboBoxItem x:Name="SystemCalendarItem" Content="系统日历" />
+                                    <ComboBoxItem Content="ICS 订阅链接" />
+                                    <ComboBoxItem Content="两者都用" />
+                                </ComboBox>
+                            </Grid>
+
+                            <Border x:Name="SystemCalendarNote"
+                                    Background="{DynamicResource InputBackgroundBrush}"
+                                    BorderBrush="{DynamicResource SeparatorBrush}"
+                                    BorderThickness="1" CornerRadius="6"
+                                    Padding="10,8" Margin="0,10,0,0"
+                                    Visibility="Collapsed">
+                                <TextBlock x:Name="SystemCalendarNoteText"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource HolidayTextBrush}"
+                                           TextWrapping="Wrap" />
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============ 订阅源（ICS） ============ -->
+                    <Border x:Name="IcsPanel" Style="{StaticResource CardStyle}"
+                            Visibility="Collapsed">
+                        <StackPanel>
+                            <!-- 卡片头：标题 + 自动刷新 -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource CardTitleStyle}"
+                                           Text="订阅源" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="自动刷新"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               VerticalAlignment="Center" Margin="0,0,7,0" />
+                                    <ComboBox x:Name="IcsRefreshCombo" Width="104" SelectedIndex="1">
+                                        <ComboBoxItem Content="10 分钟" />
+                                        <ComboBoxItem Content="30 分钟" />
+                                        <ComboBoxItem Content="60 分钟" />
+                                        <ComboBoxItem Content="120 分钟" />
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Style="{StaticResource RowHintStyle}"
+                                       Text="每隔多久重新下载一次订阅内容。面板打开时会顺带检查一次；下载失败则沿用上次缓存。" />
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <!-- 订阅列表 -->
+                            <ItemsControl x:Name="SubscriptionList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border x:Name="SubCard"
+                                                Background="{DynamicResource CardBackgroundBrush}"
+                                                BorderBrush="{DynamicResource SeparatorBrush}"
+                                                BorderThickness="1" CornerRadius="8"
+                                                Padding="10,9" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <!-- 第一行：色标 + 链接 + 启用 + 删除 -->
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Ellipse Grid.Column="0" Width="7" Height="7"
+                                                             Fill="{Binding Color}"
+                                                             VerticalAlignment="Center"
+                                                             Margin="0,0,8,0" />
+
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding DisplayUrl}"
+                                                               FontSize="11.5"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               VerticalAlignment="Center"
+                                                               ToolTip="{Binding FullUrl}" />
+
+                                                    <CheckBox Grid.Column="2"
+                                                              IsChecked="{Binding Enabled, Mode=TwoWay}"
+                                                              Content="启用"
+                                                              FontSize="11"
+                                                              VerticalAlignment="Center"
+                                                              Margin="8,0,4,0"
+                                                              ToolTip="取消勾选即暂停该订阅，但保留链接与设置" />
+
+                                                    <Button Grid.Column="3"
+                                                            Style="{StaticResource IconButtonStyle}"
+                                                            Width="22" Height="22"
+                                                            Click="OnRemoveSubscription"
+                                                            Tag="{Binding}"
+                                                            ToolTip="删除这条订阅">
+                                                        <Path Data="M0,0 L8,8 M8,0 L0,8"
+                                                              Stroke="{DynamicResource TextSecondaryBrush}"
+                                                              StrokeThickness="1.3"
+                                                              StrokeStartLineCap="Round"
+                                                              StrokeEndLineCap="Round"
+                                                              Width="8" Height="8" Stretch="Uniform" />
+                                                    </Button>
+                                                </Grid>
+
+                                                <!-- 第二行：用途 + 显示名称 -->
+                                                <Grid Margin="15,9,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="用途"
+                                                               FontSize="11"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,6,0" />
+                                                    <ComboBox Grid.Column="1"
+                                                              SelectedIndex="{Binding PurposeIndex, Mode=TwoWay}"
+                                                              Width="104"
+                                                              ToolTip="决定这条订阅的数据进入哪条数据流：节假日 → 休班标记；农历节气 → 节气与黄历；日程 → 日程列表">
+                                                        <ComboBoxItem Content="节假日" />
+                                                        <ComboBoxItem Content="农历节气" />
+                                                        <ComboBoxItem Content="日程" />
+                                                    </ComboBox>
+
+                                                    <TextBlock Grid.Column="2" Text="名称"
+                                                               FontSize="11"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="10,0,6,0" />
+                                                    <TextBox Grid.Column="3"
+                                                             Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                             Height="32" Padding="8,0"
+                                                             FontSize="11.5"
+                                                             VerticalContentAlignment="Center"
+                                                             ToolTip="给这条订阅起个短名字，便于在列表中辨认" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Enabled}" Value="False">
+                                                <Setter TargetName="SubCard" Property="Opacity" Value="0.5" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- 空列表占位 -->
+                            <TextBlock x:Name="EmptySubscriptionHint"
+                                       Text="还没有订阅源。在下方粘贴一个 .ics 链接即可添加。"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap"
+                                       Margin="2,2,0,10"
+                                       Visibility="Collapsed" />
+
+                            <!-- 添加新订阅 -->
+                            <Border Background="{DynamicResource InputBackgroundBrush}"
+                                    BorderBrush="{DynamicResource SeparatorBrush}"
+                                    BorderThickness="1" CornerRadius="8"
+                                    Padding="10" Margin="0,2,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="添加订阅源"
+                                               FontSize="11.5" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextPrimaryBrush}"
+                                               Margin="0,0,0,7" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Grid.Column="0" x:Name="NewIcsUrlTextBox"
+                                                 Height="32" Padding="8,0"
+                                                 FontSize="11.5"
+                                                 VerticalContentAlignment="Center"
+                                                 ToolTip="粘贴 .ics 日历订阅链接（http:// 或 https://）" />
+
+                                        <ComboBox Grid.Column="1" x:Name="NewIcsPurposeCombo"
+                                                  Width="104" Margin="8,0,0,0"
+                                                  SelectedIndex="0"
+                                                  VerticalAlignment="Center"
+                                                  ToolTip="这条订阅的用途">
+                                            <ComboBoxItem Content="节假日" />
+                                            <ComboBoxItem Content="农历节气" />
+                                            <ComboBoxItem Content="日程" />
+                                        </ComboBox>
+
+                                        <Button Grid.Column="2" Content="添加"
+                                                Style="{StaticResource PrimaryButtonStyle}"
+                                                Height="32" Padding="16,0" Margin="8,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Click="OnAddSubscription" />
+                                    </Grid>
+                                    <TextBlock Style="{StaticResource RowHintStyle}"
+                                               Text="支持 http / https 链接，需指向一个 .ics 文件；用途决定数据进入哪条数据流。" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ============ 其他 ============ -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource CardTitleStyle}" Text="其他" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource RowLabelStyle}"
+                                           Text="周起始日" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <RadioButton x:Name="WeekStartSunday" Content="周日" Margin="0,0,16,0" />
+                                    <RadioButton x:Name="WeekStartMonday" Content="周一" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource RowLabelStyle}"
+                                               Text="使用模拟数据（仅开发调试）" />
+                                    <TextBlock Style="{StaticResource RowHintStyle}"
+                                               Foreground="{DynamicResource HolidayTextBrush}"
+                                               Text="⚠ 开启后日程层使用假数据，仅供调试，正式使用请保持关闭。" />
+                                </StackPanel>
+                                <CheckBox Grid.Column="1" x:Name="UseMockDataCheck"
+                                          VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Style="{StaticResource RowDividerStyle}" />
+
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource RowLabelStyle}" Text="运行状态" />
+                                <TextBlock x:Name="FirstRunStateText" Style="{StaticResource RowHintStyle}"
+                                           Text="" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
                 </StackPanel>
+            </ScrollViewer>
 
-                <!-- ============ #9 近期事件显示范围 ============ -->
-                <TextBlock Text="近期事件显示范围" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <ComboBox x:Name="UpcomingDaysCombo" Margin="0,0,0,20" Padding="8,6"
-                          SelectedIndex="1">
-                    <ComboBoxItem Content="1 天" />
-                    <ComboBoxItem Content="3 天" />
-                    <ComboBoxItem Content="7 天" />
-                </ComboBox>
-
-                <!-- ============ #10 周起始日 ============ -->
-                <TextBlock Text="周起始日" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <RadioButton x:Name="WeekStartSunday" Content="周日" Margin="0,0,20,0"
-                                 VerticalAlignment="Center" />
-                    <RadioButton x:Name="WeekStartMonday" Content="周一"
-                                 VerticalAlignment="Center" />
-                </StackPanel>
-
-                <!-- ============ #11 使用模拟数据（P0-8，仅开发调试，默认关闭） ============ -->
-                <Grid Margin="0,0,0,4">
+            <!-- ==================== 底部操作栏 ==================== -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource SurfaceAltBrush}"
+                    BorderThickness="0,1,0,0"
+                    BorderBrush="{DynamicResource SeparatorBrush}"
+                    Padding="16,11">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="使用模拟数据（仅开发调试）"
-                               FontSize="13" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"
-                               VerticalAlignment="Center" />
-                    <CheckBox Grid.Column="1" x:Name="UseMockDataCheck"
-                              VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="0" x:Name="FooterLink"
+                               Text="WinCal v1.0 By www.huangao.net"
+                               FontSize="10"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center"
+                               Cursor="Hand"
+                               MouseDown="OnFooterLinkClick" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="恢复默认"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Margin="0,0,8,0"
+                                Click="OnResetDefaults" />
+                        <Button Content="退出程序"
+                                Style="{StaticResource DangerButtonStyle}"
+                                Margin="0,0,8,0"
+                                Click="OnExitApp" />
+                        <Button Content="保存"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Click="OnSave" />
+                    </StackPanel>
                 </Grid>
-                <TextBlock Text="⚠ 默认关闭。开启后日程层将使用模拟假数据（非真实日程），仅供调试，请勿在正式使用中开启。"
-                           FontSize="11" Foreground="{DynamicResource HolidayTextBrush}"
-                           Margin="0,0,0,20" TextWrapping="Wrap" />
-
-                <!-- ============ #12 首次运行状态（只读，供 T05 首启引导） ============ -->
-                <TextBlock Text="首次运行状态" FontSize="13" FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
-                <TextBlock x:Name="FirstRunStateText" Text=""
-                           FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"
-                           Margin="0,0,0,4" TextWrapping="Wrap" />
-
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- 底部操作栏 -->
-        <Border Grid.Row="2" BorderThickness="0,1,0,0"
-                BorderBrush="{DynamicResource SeparatorBrush}"
-                Padding="20,12">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" x:Name="FooterLink"
-                           Text="WinCal v1.0 By www.huangao.net"
-                           FontSize="10"
-                           Foreground="{DynamicResource TextSecondaryBrush}"
-                           VerticalAlignment="Center"
-                           Cursor="Hand"
-                           MouseDown="OnFooterLinkClick" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="恢复默认"
-                            Padding="12,6" Margin="0,0,8,0"
-                            Background="Transparent"
-                            BorderBrush="{DynamicResource SeparatorBrush}"
-                            BorderThickness="1"
-                            Cursor="Hand"
-                            Click="OnResetDefaults" />
-                    <Button Content="退出程序"
-                            Padding="12,6" Margin="0,0,8,0"
-                            Background="Transparent"
-                            BorderBrush="#FFC62828"
-                            Foreground="#FFC62828"
-                            BorderThickness="1"
-                            Cursor="Hand"
-                            Click="OnExitApp" />
-                    <Button Content="保存"
-                            Padding="20,6"
-                            Background="{DynamicResource TodayAccentBrush}"
-                            Foreground="White"
-                            BorderThickness="0"
-                            FontWeight="SemiBold"
-                            Cursor="Hand"
-                            Click="OnSave" />
-                </StackPanel>
-            </Grid>
-        </Border>
-    </Grid>
+            </Border>
+        </Grid>
     </Border>
 </Window>

@@ -5,14 +5,22 @@
     <Color x:Key="BackgroundColor">#FF2D2D2D</Color>
     <Color x:Key="CardBackgroundColor">#FF383838</Color>
 
+    <!-- ★ 输入控件 / 次级表面（2026-10-30 新增，供 Controls.xaml 使用） -->
+    <Color x:Key="SurfaceAltColor">#FF333333</Color>        <!-- 设置分组卡片底 -->
+    <Color x:Key="InputBackgroundColor">#FF262626</Color>    <!-- 输入框凹陷底 -->
+    <Color x:Key="InputBorderColor">#FF454545</Color>
+    <Color x:Key="InputBorderHoverColor">#FF5E5E5E</Color>
+    <Color x:Key="AccentSoftColor">#FF1B3D52</Color>        <!-- 强调色低透明衬底 -->
+    <Color x:Key="DangerColor">#FFEF6B6B</Color>
+
     <!-- 强调色 -->
     <Color x:Key="TodayAccentColor">#FF4CC2FF</Color>
 
     <!-- 文本色 -->
-    <Color x:Key="TextPrimaryColor">#FFFFFFFF</Color>
-    <Color x:Key="TextSecondaryColor">#FF9D9D9D</Color>
-    <Color x:Key="TextDisabledColor">#FF5C5C5C</Color>
-    <Color x:Key="TextOnAccentColor">#FF000000</Color>
+    <Color x:Key="TextPrimaryColor">#FFEDEDED</Color>
+    <Color x:Key="TextSecondaryColor">#FFA8A8A8</Color>
+    <Color x:Key="TextDisabledColor">#FF6E6E6E</Color>
+    <Color x:Key="TextOnAccentColor">#FF101010</Color>
 
     <!-- 分隔与边框 -->
     <Color x:Key="SeparatorColor">#FF404040</Color>
@@ -59,6 +67,14 @@
     <SolidColorBrush x:Key="PressedBrush" Color="{StaticResource PressedColor}" />
     <SolidColorBrush x:Key="SelectedBrush" Color="{StaticResource SelectedColor}" />
     <SolidColorBrush x:Key="EventDotBrush" Color="{StaticResource EventDotColor}" />
+
+    <!-- ★ 输入控件 / 次级表面画刷 -->
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="{StaticResource SurfaceAltColor}" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="{StaticResource InputBackgroundColor}" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="{StaticResource InputBorderColor}" />
+    <SolidColorBrush x:Key="InputBorderHoverBrush" Color="{StaticResource InputBorderHoverColor}" />
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="{StaticResource AccentSoftColor}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}" />
 
     <!-- ★ T03 新增画刷 -->
     <SolidColorBrush x:Key="HolidayBrush" Color="{StaticResource HolidayColor}" />
