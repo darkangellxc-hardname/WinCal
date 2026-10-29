@@ -10,10 +10,10 @@
                 <ResourceDictionary Source="Views/Themes/Light.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- 托盘图标定义（右键菜单在代码中动态创建） -->
+            <!-- 托盘图标定义（右键菜单在代码中动态创建）。默认折叠：仅当 ShowTrayIcon=true 时由代码置为 Visible -->
             <tb:TaskbarIcon x:Key="TrayIcon"
-                            ToolTipText="miniCal"
-                            Visibility="Visible" />
+                            ToolTipText="WinCal"
+                            Visibility="Collapsed" />
         </ResourceDictionary>
     </Application.Resources>
 
