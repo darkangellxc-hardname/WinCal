@@ -8,9 +8,14 @@
 
 ## 下载与使用
 
-前往 [Releases](../../releases) 下载 `WinCal.exe`，双击即可运行。
+前往 [Releases](../../releases) 下载，**把该版本的全部文件（`WinCal.exe` + 5 个 DLL）放进同一个目录**，
+双击 `WinCal.exe` 即可运行。
 
-- **单文件自包含**，约 65 MB，无需安装 .NET 运行时；
+- 主程序 `WinCal.exe` 约 65 MB，**已自包含 .NET 8 运行时**，无需另装 .NET；
+- 但 `dotnet publish` 单文件模式**不会把原生库打进 exe**，因此还需以下 5 个文件同目录存放：
+  `PresentationNative_cor3.dll`、`wpfgfx_cor3.dll`、`D3DCompiler_47_cor3.dll`、
+  `PenImc_cor3.dll`、`vcruntime140_cor3.dll`
+- **缺任何一个 DLL，进程仍会启动但面板画不出来**（表现为点时钟没反应，且不报错）；
 - 支持 Windows 10 1903+ / Windows 11（x64）；
 - 首次运行会询问是否开机自启；
 - 配置文件位于 `%LOCALAPPDATA%\WinCal\settings.json`。
@@ -97,7 +102,13 @@ build.bat
 publish.bat
 ```
 
-产物：`dist/WinCal.exe`（单文件自包含，约 65 MB，无需安装 .NET 运行时）。
+产物：`dist/WinCal.exe`（约 65 MB，托管程序集全部内嵌，无需安装 .NET 运行时）
+**＋ 5 个原生 DLL**（`PresentationNative_cor3.dll` / `wpfgfx_cor3.dll` / `D3DCompiler_47_cor3.dll` /
+`PenImc_cor3.dll` / `vcruntime140_cor3.dll`），共 6 个文件，分发时必须整体给出。
+
+> 若想打成真正的单文件，在 `WinCal.csproj` 加一行
+> `<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>`，
+> 重新发布后 `dist/` 只剩一个 exe（约 69 MB，原生库在首次启动时解压到 `%TEMP%\.net\`）。
 
 ## 配置
 
