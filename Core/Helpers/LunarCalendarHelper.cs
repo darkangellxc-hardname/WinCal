@@ -9,6 +9,21 @@ public static class LunarCalendarHelper
 {
     private static readonly ChineseLunisolarCalendar _calendar = new();
 
+    /// <summary>
+    /// 农历计算支持的公历年份下限（含）。底层 <see cref="ChineseLunisolarCalendar"/>
+    /// 的 <c>MinSupportedDateTime</c> 实测为 <c>1901-02-19</c>（<c>.Year</c> = 1901），
+    /// 故下限取 1901：早于此的日期在取农历时会抛 <see cref="ArgumentOutOfRangeException"/>
+    /// （本类的取值方法已做区间保护并返回空串，导航层同样按下限钳制）。
+    /// </summary>
+    public const int MinSupportedYear = 1901;
+
+    /// <summary>
+    /// 农历计算支持的公历年份上限（含）。底层 <see cref="ChineseLunisolarCalendar"/>
+    /// 的 <c>MaxSupportedDateTime</c> 实测为 <c>2101-01-28</c>（<c>.Year</c> = 2101）——
+    /// 注意 2101 年仅年初一小段可用，故上限保守取整年 2100，保证全年 365 天皆可换算。
+    /// </summary>
+    public const int MaxSupportedYear = 2100;
+
     // 农历月份名称
     private static readonly string[] _monthNames =
     {

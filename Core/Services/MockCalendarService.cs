@@ -4,8 +4,14 @@ using WinCal.Core.Models;
 namespace WinCal.Core.Services;
 
 /// <summary>
-/// 模拟日历服务（开发调试用）
+/// 模拟日历服务（<b>仅为开发调试用</b>）。
+///
+/// <para><b>⚠ 禁止默认启用（P0-8 硬要求）：</b>本服务会产生<b>随机假数据</b>。
+/// 它<b>只能</b>在 <see cref="AppSettings.UseMockData"/> 显式置为 <c>true</c> 时被使用；
+/// 任何「静默降级到本服务」的行为都是缺陷（历史缺陷：反射找不到
+/// <c>WindowsCalendarService</c> 时静默返回随机事件，已由 <see cref="DateInfoService"/> 消除）。</para>
 /// </summary>
+[Obsolete("模拟日历服务仅用于开发调试，禁止默认启用；请通过设置中的「使用模拟数据」显式开启（P0-8）。", false)]
 public class MockCalendarService : ICalendarService
 {
     private static readonly string[] MockColors = { "#0078D4", "#4285F4", "#FC3D39", "#0F9D58", "#FF6D00" };
