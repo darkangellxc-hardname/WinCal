@@ -1,6 +1,6 @@
 @echo off
 :: WinCal 一键发布脚本
-:: 输出: ./dist/WinCal.exe (单文件，约 35~55 MB)
+:: 输出: ./dist/ 共 6 个文件 = WinCal.exe + 5 个 WPF 原生 DLL（缺一不可，分发时须整体给出）
 
 cd /d "%~dp0"
 set "DOTNET="
@@ -76,5 +76,8 @@ for %%F in (".\dist\WinCal.exe") do (
     set SIZE=%%~zF
 )
 echo WinCal.exe 大小: %SIZE% 字节
+echo.
+echo [提示] dist 目录共 6 个文件：WinCal.exe + 5 个原生 DLL。
+echo        发布到 GitHub Release / 拷给别人时必须整体给出，只拿 exe 会导致面板无法渲染。
 echo.
 pause
